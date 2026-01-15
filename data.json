@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "center": "O‘quv Markazi AR Showcase",
+    "version": 1,
+    "defaultLink": "https://t.me/yourcenter"
+  },
+  "items": [
+    {
+      "id": "math_phys_lang",
+      "title": "Matematika • Fizika • Til",
+      "tag": "Asosiy fanlar",
+      "icon": "📚",
+      "desc": "Maktab va abituriyentlar uchun matematika, fizika hamda ingliz tili (IELTS, CEFR) tayyorlov kurslari.",
+      "color": "#22c55e",
+      "link": "https://t.me/yourcenter"
+    },
+    {
+      "id": "architecture",
+      "title": "Arxitektura",
+      "tag": "Design & Construction",
+      "icon": "🏛️",
+      "desc": "Arxitektura chizmalari, loyiha fikrlash, portfolio tayyorlash va konsept bilan ishlash.",
+      "color": "#f59e0b"
+    },
+    {
+      "id": "web_dev",
+      "title": "Web dasturlash",
+      "tag": "Frontend & Backend",
+      "icon": "💻",
+      "desc": "HTML, CSS, JavaScript, React va Node.js orqali zamonaviy veb ilovalar yaratish.",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "mobile_dev",
+      "title": "Mobile dasturlash",
+      "tag": "Android & iOS",
+      "icon": "📱",
+      "desc": "Flutter/Kotlin/Swift yordamida mobil ilovalar yaratish va marketplace’ga chiqarish.",
+      "color": "#6366f1"
+    },
+    {
+      "id": "modeling_3d",
+      "title": "3D Modellashtirish",
+      "tag": "CG & Viz",
+      "icon": "🧩",
+      "desc": "Blender/3ds Max orqali 3D model va vizualizatsiya.",
+      "color": "#ec4899"
+    },
+    {
+      "id": "animation",
+      "title": "Animatsiya & Motion",
+      "tag": "Video & VFX",
+      "icon": "🎬",
+      "desc": "2D/3D animatsiya, motion design, reklama va intro roliklar.",
+      "color": "#ef4444"
+    },
+    {
+      "id": "robotics",
+      "title": "Robototexnika",
+      "tag": "STEM & IoT",
+      "icon": "🤖",
+      "desc": "Arduino, sensorlar, avtomatika va robot loyihalar.",
+      "color": "#14b8a6"
+    },
+    {
+      "id": "ai_programming",
+      "title": "AI & Dasturlash",
+      "tag": "Sun’iy intellekt",
+      "icon": "🧠",
+      "desc": "Python, ML, Computer Vision va AI loyihalar.",
+      "color": "#a855f7"
+    }
+  ]
+}

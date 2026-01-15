@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AR Yo‘nalishlar • Showcase</title>
+
+  <!-- A-Frame -->
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <!-- UI OVERLAY -->
+  <div id="ui" aria-live="polite">
+    <!-- Top HUD -->
+    <div id="topbar">
+      <div id="brand">
+        <div id="logo-dot"></div>
+        <div>
+          <div id="brand-title">O‘quv Markazi • AR</div>
+          <div id="brand-sub">Yo‘nalishlar vitrinası</div>
+        </div>
+      </div>
+
+      <div id="top-actions">
+        <button class="icon-btn" id="btn-reset" title="Bosh menyu">⌂</button>
+        <button class="icon-btn" id="btn-close" title="Yopish">✕</button>
+      </div>
+    </div>
+
+    <!-- Start Screen -->
+    <section id="start" class="card">
+      <div class="start-head">
+        <h1>AR Showcase</h1>
+        <span class="pill">6DoF • WebXR</span>
+      </div>
+
+      <p class="muted" id="start-note">
+        QR orqali kirdingiz. Kamera va AR ruxsat bering, so‘ng <b>BOSHLASH</b> ni bosing.
+      </p>
+
+      <div id="previewBox">
+        <video id="previewVideo" autoplay playsinline muted></video>
+        <div class="previewFrame"></div>
+      </div>
+
+      <ul class="tips">
+        <li>Telefonni tekis tuting, 2–3 qadam yuring.</li>
+        <li>AR ochilgach kartalar atrofingizda suzadi.</li>
+        <li>Tanlash: kartani bosing yoki pastdagi ro‘yxatdan.</li>
+      </ul>
+
+      <button id="btn-start" class="primary">BOSHLASH</button>
+
+      <div class="small muted" id="compat">
+        Eslatma: AR asosan Android Chrome’da yaxshi ishlaydi.
+      </div>
+    </section>
+
+    <!-- Bottom Sheet: list / search -->
+    <section id="sheet" class="sheet" hidden>
+      <div class="sheet-head">
+        <div class="sheet-left">
+          <div class="sheet-title">Yo‘nalish tanlang</div>
+          <div class="sheet-sub" id="sheetSub">…</div>
+        </div>
+
+        <div class="sheet-right">
+          <button class="icon-btn" id="btn-reload" title="Qayta yuklash">↻</button>
+          <button class="icon-btn" id="btn-clear" title="Qidiruvni tozalash">⌫</button>
+        </div>
+      </div>
+
+      <div class="sheet-search">
+        <input id="search" type="text" placeholder="Qidirish… (masalan: web, robot, 3d)" autocomplete="off" />
+      </div>
+
+      <div id="list" class="list"></div>
+    </section>
+
+    <!-- Info / Details modal-ish -->
+    <section id="details" class="details" hidden>
+      <div class="details-card">
+        <div class="details-top">
+          <div>
+            <div class="details-title" id="dTitle">…</div>
+            <div class="details-tag" id="dTag">…</div>
+          </div>
+          <button class="icon-btn" id="btn-details-close" title="Yopish">✕</button>
+        </div>
+
+        <div class="details-desc" id="dDesc">…</div>
+
+        <div class="details-actions">
+          <a id="dLink" class="primary ghost" href="#" target="_blank" rel="noopener">Batafsil</a>
+          <button id="btn-back-to-list" class="secondary">Ro‘yxat</button>
+        </div>
+
+        <div class="small muted" id="dHint">
+          Keyin: rasm/video/model qo‘shamiz (hozircha tekst).
+        </div>
+      </div>
+    </section>
+
+    <!-- Fail Screen -->
+    <section id="fail" class="fail" hidden>
+      <div class="fail-card">
+        <div class="fail-title">🚫 AR ishlamadi</div>
+        <div class="fail-msg" id="failMsg">
+          Qurilmada WebXR/AR ishlamadi. Chrome yangilang va “Google Play Services for AR (ARCore)” o‘rnatilganini tekshiring.
+        </div>
+
+        <div class="fail-actions">
+          <button id="btn-retry" class="primary">Qayta urinish</button>
+          <a id="btn-open-chrome" class="secondary" href="#" target="_blank" rel="noopener">Chrome’da ochish</a>
+        </div>
+
+        <div class="small muted">
+          Agar Telegram/Instagram ichidan ochilgan bo‘lsa, “Chrome’da ochish”ni bosing.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- A-FRAME SCENE -->
+  <a-scene
+    id="scene"
+    renderer="antialias: true; colorManagement: true;"
+    vr-mode-ui="enabled: false"
+    webxr="requiredFeatures: local-floor, dom-overlay; overlayElement: #ui"
+    fps-check
+  >
+    <a-camera
+      id="cam"
+      position="0 1.6 0"
+      cursor="rayOrigin: mouse; fuse: false"
+      raycaster="objects: .clickable"
+    ></a-camera>
+
+    <!-- Root for AR content -->
+    <a-entity id="world" position="0 0 0"></a-entity>
+  </a-scene>
+
+  <!-- App script -->
+  <script src="./script.js" defer></script>
+</body>
+</html>
