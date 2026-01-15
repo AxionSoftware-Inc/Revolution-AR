@@ -234,7 +234,7 @@ function openItem(it) {
 
 function closeDetails() {
   details.hidden = true;
-  sheet.hidden = false;
+  sheet.hidden = true;
 }
 
 btnDetailsClose.onclick = closeDetails;
@@ -248,17 +248,11 @@ btnClose.onclick = () => {
 
 // Reset: redraw ring + show list
 btnReset.onclick = () => {
-  if (trackingOk) {
-    details.hidden = true;
-    sheet.hidden = false;
-    drawRing(items);
-  } else {
-    // if not in AR yet, just reset UI
-    details.hidden = true;
-    sheet.hidden = true;
-    start.hidden = false;
-  }
+  if (!trackingOk) return;
+  sheet.hidden = !sheet.hidden;   // toggle
+  details.hidden = true;
 };
+
 
 // ---------------------------------------------------------
 // WebXR start + "real tracking" watchdog
@@ -394,8 +388,8 @@ function drawRing(arr) {
   });
 
   // Show list by default
-  sheet.hidden = false;
-  details.hidden = true;
+  heet.hidden = true;
+details.hidden = true;
 }
 
 function pulseCard(id) {
