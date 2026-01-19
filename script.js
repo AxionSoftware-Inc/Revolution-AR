@@ -13,7 +13,7 @@ const $ = (sel) => document.querySelector(sel);
 // ---------- UI ----------
 const start = $("#start");
 const btnStart = $("#btn-start");
-const previewVideo = $("#previewVideo");
+// previewVideo removed
 
 const topbar = $("#topbar");
 const btnMenu = $("#btn-reset");   // we use as menu toggle
@@ -46,7 +46,7 @@ const cam = $("#cam");
 const world = $("#world");
 
 // ---------- State ----------
-let previewStream = null;
+// previewStream removed
 let items = [];
 let trackingOk = false;
 let currentItem = null;
@@ -96,32 +96,14 @@ function normalizeItem(raw, meta = {}) {
 // =========================================================
 // Preview camera (optional)
 // =========================================================
-async function startPreview() {
-  try {
-    const s = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "environment" },
-      audio: false
-    });
-    previewStream = s;
-    previewVideo.srcObject = s;
-  } catch (e) {
-    console.warn("Preview camera failed:", e);
-  }
-}
-
-function stopPreview() {
-  try {
-    if (previewStream) previewStream.getTracks().forEach((t) => t.stop());
-  } catch (e) {}
-  previewStream = null;
-  try { previewVideo.srcObject = null; } catch (e) {}
-}
+// Preview camera functions removed as requested
+// to prevent camera resource conflicts and simplify UI.
 
 // =========================================================
 // Fail UI
 // =========================================================
 function showFail(message) {
-  stopPreview();
+  // stopPreview removed
 
   // Hide everything else
   start.hidden = true;
@@ -132,7 +114,7 @@ function showFail(message) {
   failMsg.textContent = message;
   fail.hidden = false;
 
-  try { btnOpenChrome.href = location.href; } catch (e) {}
+  try { btnOpenChrome.href = location.href; } catch (e) { }
 }
 
 function hideFail() {
@@ -350,12 +332,12 @@ function drawRing(arr) {
   // Content layout
   const imgH = 0.62;                       // image block height (m)
   const imgW = cardW - 0.08;               // little padding
-  const imgY = (cardH / 2) - 0.10 - imgH/2; // top area
+  const imgY = (cardH / 2) - 0.10 - imgH / 2; // top area
 
   // Text positions (tuned for 1.2m card)
   const titleY = -0.06;
-  const tagY   = -0.22;
-  const descY  = -0.44;
+  const tagY = -0.22;
+  const descY = -0.44;
 
   arr.forEach((it, i) => {
     const angle = (i / n) * Math.PI * 2;
@@ -401,7 +383,7 @@ function drawRing(arr) {
     const accent = document.createElement("a-plane");
     accent.setAttribute("width", cardW.toFixed(2));
     accent.setAttribute("height", "0.06");
-    accent.setAttribute("position", `0 ${(cardH/2 - 0.03).toFixed(2)} ${dz1.toFixed(3)}`);
+    accent.setAttribute("position", `0 ${(cardH / 2 - 0.03).toFixed(2)} ${dz1.toFixed(3)}`);
     accent.setAttribute("material", `color: ${it.color}; shader: flat; side: double`);
     card.appendChild(accent);
 
@@ -473,7 +455,7 @@ function pulseCard(id) {
   );
 
   setTimeout(() => {
-    try { el.removeAttribute("animation__pulse"); } catch (e) {}
+    try { el.removeAttribute("animation__pulse"); } catch (e) { }
   }, 420);
 }
 
@@ -501,7 +483,7 @@ AFRAME.registerComponent("fps-check", {
       else this.lowFpsCount = 0;
 
       if (this.lowFpsCount >= 3) {
-        try { this.el.pause(); } catch (e) {}
+        try { this.el.pause(); } catch (e) { }
         showFail("FPS juda past bo‘lib qoldi. Qurilmada AR og‘ir ishlayapti. Kontentni yengillatish yoki kuchliroq telefon kerak bo‘lishi mumkin.");
       }
 
@@ -525,7 +507,7 @@ AFRAME.registerComponent("fps-check", {
   await loadData();
 
   // Preview camera for start screen
-  startPreview();
+  // startPreview() call removed
 
   // Show/hide close button only when details shown
   const detailsObserver = new MutationObserver(() => {
@@ -538,7 +520,7 @@ AFRAME.registerComponent("fps-check", {
     btnStart.disabled = true;
     btnStart.textContent = "YUKLANMOQDA…";
 
-    stopPreview();
+    // stopPreview removed
 
     if (!isSecure()) {
       showFail("HTTPS kerak: GitHub Pages yoki HTTPS hostingda oching. (http yoki file:// ishlamaydi)");
