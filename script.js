@@ -309,137 +309,146 @@ function drawRing(arr) {
   const n = arr.length;
 
   // ====== REAL-WORLD SIZE (meters) ======
-  const cardH = 1.20;          // 1.2m height
-  const cardW = 0.78;          // 78cm width
-  const bottomClear = 0.20;    // 20cm above floor
-  const y = bottomClear + cardH / 2; // center position -> bottom is 20cm
+  const cardH = 1.30;          // 1.3m height
+  const cardW = 0.85;          // 85cm width
+  const bottomClear = 0.30;    // 30cm above floor
+  const y = bottomClear + cardH / 2; // center position
 
-  // Desired gap between cards (edge-to-edge)
-  const gap = 0.50;            // 0.5m spacing
-  const chord = cardW + gap;   // center-to-center approx
+  // Radius for the arc
+  const radius = 3.5;          // 3.5m away from center
 
-  // Radius derived from chord length
-  // chord = 2R * sin(pi/n) -> R = chord / (2 sin(pi/n))
-  const radius = clamp(chord / (2 * Math.sin(Math.PI / n)), 1.8, 4.2);
-
-  const zForward = -0.35;
-
-  // Layer depth offsets
-  const dz0 = 0.000;
-  const dz1 = 0.008;
-  const dz2 = 0.014;
+  // Arc range: 180 degrees behind (from 90 to 270 degrees)
+  // 0 is forward, 180 is backward. 
+  // We want cards to spread from 90 to 270 degrees.
+  const startAngle = Math.PI / 2;    // 90 degrees
+  const endAngle = (3 * Math.PI) / 2; // 270 degrees
+  const arcLength = endAngle - startAngle;
 
   // Content layout
-  const imgH = 0.62;                       // image block height (m)
-  const imgW = cardW - 0.08;               // little padding
-  const imgY = (cardH / 2) - 0.10 - imgH / 2; // top area
-
-  // Text positions (tuned for 1.2m card)
-  const titleY = -0.06;
-  const tagY = -0.22;
-  const descY = -0.44;
+  const imgH = 0.65;                       // image block height
+  const imgW = cardW;                      // bleed to edges
+  const imgY = (cardH / 2) - (imgH / 2);   // top half
 
   arr.forEach((it, i) => {
-    const angle = (i / n) * Math.PI * 2;
+    // Spread across the arc
+    // If n=1, put in middle (180 deg)
+    const angle = n > 1
+      ? startAngle + (i / (n - 1)) * arcLength
+      : Math.PI;
+
     const x = Math.cos(angle) * radius;
-    const z = Math.sin(angle) * radius + zForward;
+    const z = Math.sin(angle) * radius;
 
     const card = document.createElement("a-entity");
     card.setAttribute("id", `card-${it.id}`);
     card.setAttribute("position", `${x.toFixed(3)} ${y.toFixed(3)} ${z.toFixed(3)}`);
     card.setAttribute("look-at", "#cam");
+    card.setAttribute("class", "clickable");
 
-    // ---- Soft float animation (subtle) ----
+    // ---- Soft float animation ----
     card.setAttribute(
       "animation__float",
-      `property: position; to: ${x.toFixed(3)} ${(y + 0.03).toFixed(3)} ${z.toFixed(3)}; dir: alternate; loop: true; dur: ${1800 + (i % 5) * 220}; easing: easeInOutSine`
+      `property: position; to: ${x.toFixed(3)} ${(y + 0.05).toFixed(3)} ${z.toFixed(3)}; dir: alternate; loop: true; dur: ${2000 + (i % 5) * 300}; easing: easeInOutSine`
     );
 
-    // ---- Shadow (fake) ----
+    // ---- Outer Glow / Shadow ----
     const shadow = document.createElement("a-plane");
-    shadow.setAttribute("width", (cardW + 0.10).toFixed(2));
-    shadow.setAttribute("height", (cardH + 0.10).toFixed(2));
-    shadow.setAttribute("position", `0 -0.03 ${(-0.02).toFixed(3)}`);
-    shadow.setAttribute("material", "color: #000000; opacity: 0.30; transparent: true; shader: flat; side: double");
+    shadow.setAttribute("width", (cardW + 0.15).toFixed(2));
+    shadow.setAttribute("height", (cardH + 0.15).toFixed(2));
+    shadow.setAttribute("position", `0 0 ${(-0.03).toFixed(3)}`);
+    shadow.setAttribute("material", `color: ${it.color}; opacity: 0.15; transparent: true; shader: flat; side: double`);
     card.appendChild(shadow);
 
-    // ---- Border frame ----
+    // ---- Glass Border ----
     const border = document.createElement("a-plane");
-    border.setAttribute("width", (cardW + 0.04).toFixed(2));
-    border.setAttribute("height", (cardH + 0.04).toFixed(2));
+    border.setAttribute("width", (cardW + 0.02).toFixed(2));
+    border.setAttribute("height", (cardH + 0.02).toFixed(2));
     border.setAttribute("position", `0 0 ${(-0.01).toFixed(3)}`);
-    border.setAttribute("material", "color: #111827; shader: flat; side: double");
+    border.setAttribute("material", "color: #ffffff; opacity: 0.1; transparent: true; shader: flat; side: double");
     card.appendChild(border);
 
-    // ---- Main background ----
+    // ---- Main Body ----
     const bg = document.createElement("a-plane");
     bg.setAttribute("width", cardW.toFixed(2));
     bg.setAttribute("height", cardH.toFixed(2));
-    bg.setAttribute("position", `0 0 ${dz0.toFixed(3)}`);
-    bg.setAttribute("material", "color: #0b1220; shader: flat; side: double");
+    bg.setAttribute("position", `0 0 0`);
+    bg.setAttribute("material", "color: #0f172a; opacity: 0.95; transparent: true; shader: flat; side: double");
     card.appendChild(bg);
 
-    // ---- Accent strip ----
-    const accent = document.createElement("a-plane");
-    accent.setAttribute("width", cardW.toFixed(2));
-    accent.setAttribute("height", "0.06");
-    accent.setAttribute("position", `0 ${(cardH / 2 - 0.03).toFixed(2)} ${dz1.toFixed(3)}`);
-    accent.setAttribute("material", `color: ${it.color}; shader: flat; side: double`);
-    card.appendChild(accent);
-
-    // ---- Image block ----
+    // ---- Top Image ----
     const img = document.createElement("a-plane");
     img.setAttribute("width", imgW.toFixed(2));
     img.setAttribute("height", imgH.toFixed(2));
-    img.setAttribute("position", `0 ${imgY.toFixed(2)} ${dz1.toFixed(3)}`);
+    img.setAttribute("position", `0 ${imgY.toFixed(3)} 0.01`);
     img.setAttribute("material", it.image
-      ? `src: url(${it.image}); shader: flat; side: double`
-      : `color: #0f172a; shader: flat; side: double`
+      ? `src: url(${it.image}); shader: flat; side: double; transparent: false`
+      : `color: #1e293b; shader: flat; side: double`
     );
     card.appendChild(img);
 
-    // ---- Image overlay gradient-ish (darker bottom for readability) ----
-    const imgFade = document.createElement("a-plane");
-    imgFade.setAttribute("width", imgW.toFixed(2));
-    imgFade.setAttribute("height", imgH.toFixed(2));
-    imgFade.setAttribute("position", `0 ${imgY.toFixed(2)} ${dz2.toFixed(3)}`);
-    imgFade.setAttribute("material", "color: #000000; opacity: 0.20; transparent: true; shader: flat; side: double");
-    card.appendChild(imgFade);
+    // ---- Accent Bar (Bottom of Image) ----
+    const accent = document.createElement("a-plane");
+    accent.setAttribute("width", cardW.toFixed(2));
+    accent.setAttribute("height", "0.01");
+    accent.setAttribute("position", `0 ${(imgY - imgH / 2).toFixed(3)} 0.02`);
+    accent.setAttribute("material", `color: ${it.color}; shader: flat; side: double`);
+    card.appendChild(accent);
 
-    // ---- Title ----
+    // ---- Text Content Group ----
+    const textGroup = document.createElement("a-entity");
+    textGroup.setAttribute("position", `0 ${(-imgH / 4).toFixed(3)} 0.02`);
+    card.appendChild(textGroup);
+
+    // Title
     const title = document.createElement("a-text");
-    title.setAttribute("value", `${it.icon} ${it.title}`);
+    title.setAttribute("value", it.title.toUpperCase());
     title.setAttribute("align", "center");
-    title.setAttribute("width", (cardW * 1.35).toFixed(2));
-    title.setAttribute("position", `0 ${titleY.toFixed(2)} ${dz2.toFixed(3)}`);
+    title.setAttribute("width", (cardW * 1.5).toFixed(2));
+    title.setAttribute("position", `0 0.15 0`);
     title.setAttribute("color", "white");
-    title.setAttribute("wrap-count", "24");
-    card.appendChild(title);
+    title.setAttribute("font", "mozillavr");
+    title.setAttribute("wrap-count", "20");
+    textGroup.appendChild(title);
 
-    // ---- Tag ----
+    // Tag / Category
     const tag = document.createElement("a-text");
     tag.setAttribute("value", it.tag);
     tag.setAttribute("align", "center");
-    tag.setAttribute("width", (cardW * 1.55).toFixed(2));
-    tag.setAttribute("position", `0 ${tagY.toFixed(2)} ${dz2.toFixed(3)}`);
-    tag.setAttribute("color", "#cbd5e1");
-    tag.setAttribute("wrap-count", "28");
-    card.appendChild(tag);
+    tag.setAttribute("width", (cardW * 1.2).toFixed(2));
+    tag.setAttribute("position", `0 0.02 0`);
+    tag.setAttribute("color", it.color);
+    tag.setAttribute("wrap-count", "30");
+    textGroup.appendChild(tag);
 
-    // ---- Description ----
+    // Description
     const desc = document.createElement("a-text");
     desc.setAttribute("value", it.desc || "");
     desc.setAttribute("align", "center");
-    desc.setAttribute("width", (cardW * 1.70).toFixed(2));
-    desc.setAttribute("position", `0 ${descY.toFixed(2)} ${dz2.toFixed(3)}`);
-    desc.setAttribute("color", "#a3b0c2");
-    desc.setAttribute("wrap-count", "32");
-    card.appendChild(desc);
+    desc.setAttribute("width", (cardW * 1.4).toFixed(2));
+    desc.setAttribute("position", `0 -0.25 0`);
+    desc.setAttribute("color", "#cbd5e1");
+    desc.setAttribute("wrap-count", "35");
+    textGroup.appendChild(desc);
+
+    // Click Hint
+    const hint = document.createElement("a-text");
+    hint.setAttribute("value", "Batafsil ma'lumot uchun bosing");
+    hint.setAttribute("align", "center");
+    hint.setAttribute("width", (cardW * 1.1).toFixed(2));
+    hint.setAttribute("position", `0 -0.5 0`);
+    hint.setAttribute("color", "#94a3b8");
+    hint.setAttribute("wrap-count", "45");
+    textGroup.appendChild(hint);
+
+    // Event listener for clicking
+    card.addEventListener("click", () => {
+      openItem(it);
+      pulseCard(it.id);
+    });
 
     world.appendChild(card);
   });
 
-  // AR-first overlays off
   sheet.hidden = true;
   details.hidden = true;
 }

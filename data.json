@@ -1,74 +1,82 @@
 {
   "meta": {
-    "center": "O‘quv Markazi AR Showcase",
-    "version": 1,
+    "center": "Revolution AR",
+    "version": 3,
     "defaultLink": "https://t.me/yourcenter"
   },
   "items": [
     {
       "id": "math_phys_lang",
-      "title": "Matematika • Fizika • Til",
-      "tag": "Asosiy fanlar",
+      "title": "Fundamental Fanlar",
+      "tag": "Matematika • Fizika • Ingliz tili",
       "icon": "📚",
-      "desc": "Maktab va abituriyentlar uchun matematika, fizika hamda ingliz tili (IELTS, CEFR) tayyorlov kurslari.",
-      "color": "#22c55e",
-      "link": "https://t.me/yourcenter"
+      "desc": "Abituriyentlar uchun chuqurlashtirilgan tayyorlov kurslari va IELTS testlariga professional tayyorgarlik.",
+      "color": "#10b981",
+      "link": "https://t.me/yourcenter",
+      "image": "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800"
     },
     {
       "id": "architecture",
-      "title": "Arxitektura",
-      "tag": "Design & Construction",
+      "title": "Arxitektura & Dizayn",
+      "tag": "Loyiha • Konsept • Vizual",
       "icon": "🏛️",
-      "desc": "Arxitektura chizmalari, loyiha fikrlash, portfolio tayyorlash va konsept bilan ishlash.",
-      "color": "#f59e0b"
+      "desc": "Professional arxitektura chizmalari, 3D vizualizatsiya va portfolio yaratish sirlari.",
+      "color": "#f59e0b",
+      "image": "https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=800"
     },
     {
       "id": "web_dev",
-      "title": "Web dasturlash",
-      "tag": "Frontend & Backend",
+      "title": "Web Dasturlash",
+      "tag": "Frontend • Backend • Fullstack",
       "icon": "💻",
-      "desc": "HTML, CSS, JavaScript, React va Node.js orqali zamonaviy veb ilovalar yaratish.",
-      "color": "#3b82f6"
+      "desc": "Zamonaviy veb texnologiyalar: React, Node.js va bulutli texnologiyalar orqali real loyihalar yaratish.",
+      "color": "#3b82f6",
+      "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800"
     },
     {
       "id": "mobile_dev",
-      "title": "Mobile dasturlash",
-      "tag": "Android & iOS",
+      "title": "Mobile Dasturlash",
+      "tag": "iOS • Android • Flutter",
       "icon": "📱",
-      "desc": "Flutter/Kotlin/Swift yordamida mobil ilovalar yaratish va marketplace’ga chiqarish.",
-      "color": "#6366f1"
+      "desc": "Dart va Flutter yordamida har qanday murakkablikdagi mobil ilovalar yaratish va bozorga chiqarish.",
+      "color": "#6366f1",
+      "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=800"
     },
     {
       "id": "modeling_3d",
       "title": "3D Modellashtirish",
-      "tag": "CG & Viz",
+      "tag": "CGI • VFX • Rendering",
       "icon": "🧩",
-      "desc": "Blender/3ds Max orqali 3D model va vizualizatsiya.",
-      "color": "#ec4899"
+      "desc": "Blender va 3ds Max dasturlarida fotorealistik modellar va interyer dizaynlari yaratish.",
+      "color": "#d946ef",
+      "image": "https://images.unsplash.com/photo-1615840287214-7ff58936c4cf?q=80&w=800"
     },
     {
       "id": "animation",
       "title": "Animatsiya & Motion",
-      "tag": "Video & VFX",
+      "tag": "2D • 3D • Video Editing",
       "icon": "🎬",
-      "desc": "2D/3D animatsiya, motion design, reklama va intro roliklar.",
-      "color": "#ef4444"
+      "desc": "Motion design, reklama roliklari va professional video montaj san'atini o'rganing.",
+      "color": "#ef4444",
+      "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800"
     },
     {
       "id": "robotics",
       "title": "Robototexnika",
-      "tag": "STEM & IoT",
+      "tag": "STEM • Arduino • IoT",
       "icon": "🤖",
-      "desc": "Arduino, sensorlar, avtomatika va robot loyihalar.",
-      "color": "#14b8a6"
+      "desc": "Elektronika, sensorlar va aqlli tizimlar yaratish bo'yicha amaliy mashg'ulotlar.",
+      "color": "#14b8a6",
+      "image": "https://images.unsplash.com/photo-1531746790731-6c087fecd05a?q=80&w=800"
     },
     {
       "id": "ai_programming",
       "title": "AI & Dasturlash",
-      "tag": "Sun’iy intellekt",
+      "tag": "Python • Data Science • ML",
       "icon": "🧠",
-      "desc": "Python, ML, Computer Vision va AI loyihalar.",
-      "color": "#a855f7"
+      "desc": "Sun'iy intellekt, neyron tarmoqlar va katta ma'lumotlar bilan ishlash bo'yicha zamonaviy kurs.",
+      "color": "#8b5cf6",
+      "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=800"
     }
   ]
 }
