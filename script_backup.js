@@ -298,101 +298,6 @@ async function waitForRealTracking(timeoutMs = 7000) {
 // =========================================================
 // AR Ring drawing
 // =========================================================
-// =========================================================
-// AR Enhancements & Utilities
-// =========================================================
-
-/**
- * Removes emojis and special characters that A-Frame's default font can't render
- */
-function cleanText(text) {
-  if (!text) return "";
-  // 1. Replace curly/special apostrophes common in Uzbek Latin with standard ones
-  let clean = text.replace(/[‘’ʻʼ]/g, "'");
-  // 2. Remove emojis and keep basic Latin/Cyrillic-ish characters
-  clean = clean.replace(/[\u1F600-\u1F64F]|[\u1F300-\u1F5FF]|[\u1F680-\u1F6FF]|[\u1F1E0-\u1F1FF]|[\u2600-\u26FF]|[\u2700-\u27BF]/g, "");
-  return clean.trim();
-}
-
-/**
- * Creates a field of floating particles to make the AR world feel alive
- */
-function createParticles(count = 40) {
-  const container = document.createElement("a-entity");
-  container.setAttribute("id", "particles");
-
-  for (let i = 0; i < count; i++) {
-    const p = document.createElement("a-octahedron");
-    const x = (Math.random() - 0.5) * 12;
-    const y = (Math.random() * 4);
-    const z = (Math.random() - 0.5) * 12;
-
-    p.setAttribute("position", `${x} ${y} ${z}`);
-    p.setAttribute("radius", (Math.random() * 0.05 + 0.02).toFixed(3));
-    p.setAttribute("material", {
-      color: i % 2 === 0 ? "#38bdf8" : "#818cf8",
-      opacity: 0.4,
-      transparent: true,
-      shader: "flat"
-    });
-
-    p.setAttribute("animation__float", {
-      property: "position",
-      to: `${x} ${y + 0.5} ${z}`,
-      dir: "alternate",
-      loop: true,
-      dur: 3000 + Math.random() * 3000,
-      easing: "easeInOutSine"
-    });
-
-    container.appendChild(p);
-  }
-  return container;
-}
-
-/**
- * Creates a decorative center piece for the ring
- */
-function createCenterPiece() {
-  const center = document.createElement("a-entity");
-  center.setAttribute("position", "0 0 0");
-
-  // Floor Glow
-  const floorGlow = document.createElement("a-circle");
-  floorGlow.setAttribute("rotation", "-90 0 0");
-  floorGlow.setAttribute("radius", "2");
-  floorGlow.setAttribute("material", "shader: flat; color: #38bdf8; opacity: 0.1; transparent: true");
-  center.appendChild(floorGlow);
-
-  // Rotating Rings
-  for (let i = 0; i < 3; i++) {
-    const ring = document.createElement("a-ring");
-    ring.setAttribute("radius-inner", (1.2 + i * 0.3).toFixed(2));
-    ring.setAttribute("radius-outer", (1.22 + i * 0.3).toFixed(2));
-    ring.setAttribute("rotation", "90 0 0");
-    ring.setAttribute("material", "shader: flat; color: #38bdf8; opacity: 0.3; transparent: true");
-    ring.setAttribute("animation", `property: rotation; to: 90 ${i % 2 === 0 ? 360 : -360} 0; loop: true; dur: ${8000 + i * 2000}; easing: linear`);
-    center.appendChild(ring);
-  }
-
-  // Floating Logo / Title in Center
-  const title = document.createElement("a-text");
-  title.setAttribute("value", "REVOLUTION\nAR");
-  title.setAttribute("align", "center");
-  title.setAttribute("position", "0 1.5 0");
-  title.setAttribute("width", "6");
-  title.setAttribute("color", "white");
-  title.setAttribute("font", "https://cdn.aframe.io/fonts/Exo2Bold.fnt");
-  title.setAttribute("animation", "property: position; to: 0 1.7 0; dir: alternate; loop: true; dur: 2000; easing: easeInOutSine");
-  title.setAttribute("look-at", "#cam");
-  center.appendChild(title);
-
-  return center;
-}
-
-// =========================================================
-// AR Ring drawing
-// =========================================================
 function clearWorld() {
   world.innerHTML = "";
 }
@@ -401,27 +306,28 @@ function drawRing(arr) {
   clearWorld();
   if (!arr || arr.length === 0) return;
 
-  // Add environment enhancers
-  world.appendChild(createParticles());
-  world.appendChild(createCenterPiece());
-
   const n = arr.length;
 
   // ====== ENHANCED SIZE (meters) ======
-  const cardH = 2.2;
-  const cardW = 1.4;
-  const bottomClear = 0.2;
-  const yBase = bottomClear + cardH / 2;
+  // Making them even more prominent as requested
+  const cardH = 2.0;          // 2.0m height
+  const cardW = 1.25;         // 1.25m width
+  const bottomClear = 0.10;   // 10cm from floor
+  const y = bottomClear + cardH / 2;
 
   // Radius optimized for high-impact visibility
-  const radius = 3.5;
+  const radius = 3.2;
 
-  // Arc range: 240 degrees centered in front of user (-Z) 
-  // Wait, previous was +Z (behind). Let's make it more spread out.
-  const centerAngle = -Math.PI / 2; // Facing forward
-  const arcDegree = 220;
+  // Arc range: 240 degrees centered behind user (+Z)
+  const centerAngle = Math.PI / 2;
+  const arcDegree = 240;
   const arcRad = (arcDegree * Math.PI) / 180;
   const startAngle = centerAngle - arcRad / 2;
+
+  // Content layout
+  const imgH = 1.2;
+  const imgW = cardW;
+  const imgY = (cardH / 2) - (imgH / 2);
 
   arr.forEach((it, i) => {
     const angle = n > 1
@@ -433,49 +339,34 @@ function drawRing(arr) {
 
     const card = document.createElement("a-entity");
     card.setAttribute("id", `card-${it.id}`);
-    card.setAttribute("position", `${x.toFixed(3)} ${yBase.toFixed(3)} ${z.toFixed(3)}`);
+    card.setAttribute("position", `${x.toFixed(3)} ${y.toFixed(3)} ${z.toFixed(3)}`);
     card.setAttribute("look-at", "#cam");
     card.setAttribute("class", "clickable");
 
-    // ---- Float Animation ----
-    card.setAttribute("animation__float", {
-      property: "position",
-      to: `${x.toFixed(3)} ${(yBase + 0.15).toFixed(3)} ${z.toFixed(3)}`,
-      dir: "alternate",
-      loop: true,
-      dur: 2000 + (i % 5) * 400,
-      easing: "easeInOutSine"
-    });
+    // ---- Subtle Animation ----
+    card.setAttribute(
+      "animation__float",
+      `property: position; to: ${x.toFixed(3)} ${(y + 0.12).toFixed(3)} ${z.toFixed(3)}; dir: alternate; loop: true; dur: ${2500 + (i % 5) * 500}; easing: easeInOutSine`
+    );
 
-    // ---- Shadow / Depth Plane ----
-    const shadow = document.createElement("a-plane");
-    shadow.setAttribute("width", cardW.toFixed(2));
-    shadow.setAttribute("height", cardH.toFixed(2));
-    shadow.setAttribute("position", "0 0 -0.15");
-    shadow.setAttribute("material", "color: #000; opacity: 0.4; transparent: true; shader: flat");
-    card.appendChild(shadow);
-
-    // ---- Border / Frame ----
-    const frame = document.createElement("a-plane");
-    frame.setAttribute("width", (cardW + 0.04).toFixed(2));
-    frame.setAttribute("height", (cardH + 0.04).toFixed(2));
-    frame.setAttribute("position", "0 0 -0.01");
-    frame.setAttribute("material", `color: ${it.color}; shader: flat; side: double`);
-    card.appendChild(frame);
+    // ---- Glow / Aura ----
+    const glow = document.createElement("a-plane");
+    glow.setAttribute("width", (cardW + 0.5).toFixed(2));
+    glow.setAttribute("height", (cardH + 0.5).toFixed(2));
+    glow.setAttribute("position", "0 0 -0.06");
+    glow.setAttribute("material", `color: ${it.color}; opacity: 0.12; transparent: true; shader: flat; side: double`);
+    card.appendChild(glow);
 
     // ---- Main Card Background ----
     const bg = document.createElement("a-plane");
     bg.setAttribute("width", cardW.toFixed(2));
     bg.setAttribute("height", cardH.toFixed(2));
-    bg.setAttribute("material", "color: #0f172a; opacity: 0.95; shader: flat; side: double; transparent: true");
+    bg.setAttribute("material", "color: #0b1222; opacity: 1; shader: flat; side: double");
     card.appendChild(bg);
 
-    // ---- Image Section ----
-    const imgH = 1.3;
-    const imgY = (cardH / 2) - (imgH / 2) - 0.05;
-
+    // ---- Header Image ----
     const img = document.createElement("a-plane");
-    img.setAttribute("width", (cardW - 0.1).toFixed(2));
+    img.setAttribute("width", imgW.toFixed(2));
     img.setAttribute("height", imgH.toFixed(2));
     img.setAttribute("position", `0 ${imgY.toFixed(3)} 0.02`);
     img.setAttribute("material", it.image
@@ -484,58 +375,74 @@ function drawRing(arr) {
     );
     card.appendChild(img);
 
-    // ---- Gradient Overlay for Image ----
-    const overlay = document.createElement("a-plane");
-    overlay.setAttribute("width", (cardW - 0.1).toFixed(2));
-    overlay.setAttribute("height", "0.4");
-    overlay.setAttribute("position", `0 ${(imgY - imgH / 2 + 0.2).toFixed(3)} 0.03`);
-    overlay.setAttribute("material", "color: #0f172a; opacity: 0.8; transparent: true; shader: flat");
-    card.appendChild(overlay);
+    // ---- Accent Divider ----
+    const line = document.createElement("a-plane");
+    line.setAttribute("width", cardW.toFixed(2));
+    line.setAttribute("height", "0.02");
+    line.setAttribute("position", `0 ${(imgY - imgH / 2).toFixed(3)} 0.04`);
+    line.setAttribute("material", `color: ${it.color}; shader: flat`);
+    card.appendChild(line);
 
-    // ---- TEXT AREA ----
-    const textBaseY = -0.4;
-    const cleanTitle = cleanText(it.title).toUpperCase();
-    const cleanTag = cleanText(it.tag);
+    // ---- TEXT AREA (Using explicit entity components for reliability) ----
+    const textBaseY = -0.45;
 
-    // Title
-    const titleEl = document.createElement("a-text");
-    titleEl.setAttribute("value", cleanTitle);
-    titleEl.setAttribute("align", "center");
-    titleEl.setAttribute("width", (cardW * 2.2).toFixed(2));
-    titleEl.setAttribute("color", "white");
-    titleEl.setAttribute("position", `0 ${textBaseY + 0.25} 0.05`);
-    titleEl.setAttribute("wrap-count", "18");
-    titleEl.setAttribute("font", "https://cdn.aframe.io/fonts/Exo2Bold.fnt");
+    // Title Entity
+    const titleEl = document.createElement("a-entity");
+    titleEl.setAttribute("position", `0 ${textBaseY + 0.30} 0.08`);
+    titleEl.setAttribute("text", {
+      value: it.title.toUpperCase(),
+      align: "center",
+      width: (cardW * 1.9),
+      color: "white",
+      wrapCount: 15,
+      shader: "msdf",
+      negate: false
+    });
     card.appendChild(titleEl);
 
-    // Tag
-    const tagEl = document.createElement("a-text");
-    tagEl.setAttribute("value", cleanTag);
-    tagEl.setAttribute("align", "center");
-    tagEl.setAttribute("width", (cardW * 1.6).toFixed(2));
-    tagEl.setAttribute("color", it.color);
-    tagEl.setAttribute("position", `0 ${textBaseY + 0.02} 0.05`);
-    tagEl.setAttribute("wrap-count", "25");
-    tagEl.setAttribute("font", "https://cdn.aframe.io/fonts/DejaVu-sdf.fnt");
+    // Tag Entity
+    const tagEl = document.createElement("a-entity");
+    tagEl.setAttribute("position", `0 ${textBaseY + 0.08} 0.08`);
+    tagEl.setAttribute("text", {
+      value: it.tag,
+      align: "center",
+      width: (cardW * 1.5),
+      color: it.color,
+      wrapCount: 24,
+      shader: "msdf",
+      negate: false
+    });
     card.appendChild(tagEl);
 
-    // "TAP FOR INFO" box
-    const btnHint = document.createElement("a-plane");
-    btnHint.setAttribute("width", (cardW - 0.4).toFixed(2));
-    btnHint.setAttribute("height", "0.15");
-    btnHint.setAttribute("position", `0 ${textBaseY - 0.3} 0.05`);
-    btnHint.setAttribute("material", `color: ${it.color}; opacity: 0.2; transparent: true; shader: flat`);
+    // Description Entity
+    const descEl = document.createElement("a-entity");
+    descEl.setAttribute("position", `0 ${textBaseY - 0.25} 0.08`);
+    descEl.setAttribute("text", {
+      value: it.desc || "",
+      align: "center",
+      width: (cardW * 1.7),
+      color: "#cbd5e1",
+      wrapCount: 28,
+      shader: "msdf",
+      negate: false
+    });
+    card.appendChild(descEl);
 
-    const btnText = document.createElement("a-text");
-    btnText.setAttribute("value", "BATAFSIL MA'LUMOT");
-    btnText.setAttribute("align", "center");
-    btnText.setAttribute("width", (cardW * 1.2).toFixed(2));
-    btnText.setAttribute("color", "white");
-    btnText.setAttribute("wrap-count", "20");
-    btnHint.appendChild(btnText);
-    card.appendChild(btnHint);
+    // Interaction Prompt Entity
+    const ctaEl = document.createElement("a-entity");
+    ctaEl.setAttribute("position", `0 ${textBaseY - 0.60} 0.08`);
+    ctaEl.setAttribute("text", {
+      value: "BATA SIL MA'LUMOT UCHUN BOSING",
+      align: "center",
+      width: (cardW * 1.1),
+      color: "#64748b",
+      wrapCount: 35,
+      shader: "msdf",
+      negate: false
+    });
+    card.appendChild(ctaEl);
 
-    // Add interaction
+    // Add event listener for interactions
     card.addEventListener("click", () => {
       openItem(it);
       pulseCard(it.id);
@@ -547,7 +454,6 @@ function drawRing(arr) {
   sheet.hidden = true;
   details.hidden = true;
 }
-
 
 
 function pulseCard(id) {
