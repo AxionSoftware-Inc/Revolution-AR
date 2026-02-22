@@ -501,37 +501,38 @@ function drawRing(arr) {
     const titleEl = document.createElement("a-text");
     titleEl.setAttribute("value", cleanTitle);
     titleEl.setAttribute("align", "center");
-    titleEl.setAttribute("width", (cardW * 2.2).toFixed(2));
+    titleEl.setAttribute("width", (cardW * 2.5).toFixed(2));
     titleEl.setAttribute("color", "white");
-    titleEl.setAttribute("position", `0 ${textBaseY + 0.25} 0.05`);
-    titleEl.setAttribute("wrap-count", "18");
-    titleEl.setAttribute("font", "https://cdn.aframe.io/fonts/Exo2Bold.fnt");
+    titleEl.setAttribute("position", `0 ${textBaseY + 0.35} 0.05`);
+    titleEl.setAttribute("wrap-count", "14");
+    titleEl.setAttribute("font", "mozillavr");
     card.appendChild(titleEl);
 
     // Tag
     const tagEl = document.createElement("a-text");
     tagEl.setAttribute("value", cleanTag);
     tagEl.setAttribute("align", "center");
-    tagEl.setAttribute("width", (cardW * 1.6).toFixed(2));
+    tagEl.setAttribute("width", (cardW * 1.8).toFixed(2));
     tagEl.setAttribute("color", it.color);
-    tagEl.setAttribute("position", `0 ${textBaseY + 0.02} 0.05`);
-    tagEl.setAttribute("wrap-count", "25");
-    tagEl.setAttribute("font", "https://cdn.aframe.io/fonts/DejaVu-sdf.fnt");
+    tagEl.setAttribute("position", `0 ${textBaseY + 0.12} 0.05`);
+    tagEl.setAttribute("wrap-count", "22");
+    tagEl.setAttribute("font", "mozillavr");
     card.appendChild(tagEl);
 
-    // "TAP FOR INFO" box
+    // Button
     const btnHint = document.createElement("a-plane");
-    btnHint.setAttribute("width", (cardW - 0.4).toFixed(2));
-    btnHint.setAttribute("height", "0.15");
-    btnHint.setAttribute("position", `0 ${textBaseY - 0.3} 0.05`);
-    btnHint.setAttribute("material", `color: ${it.color}; opacity: 0.2; transparent: true; shader: flat`);
+    btnHint.setAttribute("width", (cardW - 0.2).toFixed(2));
+    btnHint.setAttribute("height", "0.2");
+    btnHint.setAttribute("position", `0 ${textBaseY - 0.15} 0.06`);
+    btnHint.setAttribute("material", `color: ${it.color}; opacity: 0.9; shader: flat; transparent: true`);
 
     const btnText = document.createElement("a-text");
-    btnText.setAttribute("value", "BATAFSIL MA'LUMOT");
+    btnText.setAttribute("value", "TANLASH");
     btnText.setAttribute("align", "center");
-    btnText.setAttribute("width", (cardW * 1.2).toFixed(2));
+    btnText.setAttribute("width", (cardW * 1.5).toFixed(2));
     btnText.setAttribute("color", "white");
-    btnText.setAttribute("wrap-count", "20");
+    btnText.setAttribute("wrap-count", "15");
+    btnText.setAttribute("font", "mozillavr");
     btnHint.appendChild(btnText);
     card.appendChild(btnHint);
 
